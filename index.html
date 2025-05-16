@@ -2191,14 +2191,14 @@ function sendWhatsAppMessage(event) {
     const message = document.getElementById('message').value.trim();
     
     // Business WhatsApp number
-    const businessNumber = '+91 9381434341 '; // Replace with your actual WhatsApp business number
+    const businessNumber = '+91 9959732476 '; // Replace with your actual WhatsApp business number
     
     try {
         // Format the message
         const formattedMessage = `*New Course Inquiry*%0A%0A*Name:* ${encodeURIComponent(name)}%0A*Email:* ${encodeURIComponent(email)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Course:* ${encodeURIComponent(course)}%0A*Message:* ${encodeURIComponent(message)}`;
         
         // Create WhatsApp URL
-        const whatsappURL = `https://wa.me/9959732476`;
+        const whatsappURL = `https://wa.me/${+919959732476}?text=${formattedMessage}`;
         
         // Open WhatsApp in new tab
         window.open(whatsappURL, '_blank');
