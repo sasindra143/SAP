@@ -60,6 +60,7 @@
         .logo img {
             height: 50px;
             width: auto;
+            
         }
 
         .nav-menu {
@@ -217,7 +218,7 @@
 
         .feature-card {
             background: rgba(255, 255, 255, 0.1);
-            padding: 0.5rem;
+            padding: 0.3rem;
             border-radius: 1rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1790,36 +1791,77 @@
             </div>
         </div>
 
-        <div class="form-container animate__animated animate__fadeInRight">
-            <form class="contact-form" id="whatsappForm" onsubmit="sendToWhatsApp(event)">
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="text" id="name" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" placeholder="Your Email" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <input type="tel" id="phone" placeholder="Phone Number" required>
-                    </div>
-                    <div class="form-group">
-                        <select id="course" required>
-                            <option value="" disabled selected>Select Course</option>
-                            <option value="SAP S/4HANA Finance">SAP S/4HANA Finance</option>
-                            <option value="SAP FICO Workshop">SAP FICO Workshop</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <textarea id="message" placeholder="Your Message" rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fab fa-whatsapp"></i> Send via WhatsApp
-                </button>
-            </form>
+       <div class="contact-form">
+    <form id="whatsappForm" onsubmit="return sendWhatsAppMessage(event)">
+        <div class="form-group">
+            <input type="text" id="name" placeholder="Your Name" required>
         </div>
+        <div class="form-group">
+            <input type="email" id="email" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+            <input type="tel" id="phone" placeholder="Your Phone" required>
+        </div>
+        <div class="form-group">
+            <select id="course" required>
+                <option value="">Select Course</option>
+                <option value="sap-s4hana">SAP S/4HANA Finance – 3 Months</option>
+                <option value="sap-fico">SAP FICO Workshop – 1 Month</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <textarea id="message" placeholder="Your Message" required></textarea>
+        </div>
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <button type="submit" class="submit-btn">
+            <i class="fab fa-whatsapp"></i> Send via WhatsApp
+        </button>
+    </form>
+</div>
+
+    <style>
+        .error-message {
+    color: #ff3333;
+    background-color: rgba(255, 51, 51, 0.1);
+    border: 1px solid #ff3333;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 14px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.submit-btn {
+    background-color: #25d366;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #128c7e;
+}
+
+.submit-btn i {
+    font-size: 18px;
+}
+    </style>
 
         <div class="map-container animate__animated animate__fadeInUp">
             <iframe
@@ -1828,6 +1870,14 @@
             </iframe>
         </div>
     </div>
+
+
+
+   
+
+
+
+
 </section>
 
 <style>
@@ -2130,36 +2180,48 @@
 </style>
 
 <script>
-function sendToWhatsApp(event) {
+function sendWhatsAppMessage(event) {
     event.preventDefault();
     
     // Get form values
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const course = document.getElementById('course').value;
-    const message = document.getElementById('message').value;
+    const message = document.getElementById('message').value.trim();
     
-    // Format the message
-    const whatsappMessage = 
-        `*New Course Inquiry*\n\n` +
-        `*Name:* ${name}\n` +
-        `*Email:* ${email}\n` +
-        `*Phone:* ${phone}\n` +
-        `*Course:* ${course}\n` +
-        `*Message:* ${message}`;
+    // Business WhatsApp number
+    const businessNumber = '+91 9381434341 '; // Replace with your actual WhatsApp business number
     
-    // Replace this with your WhatsApp number
-    const whatsappNumber = '91 9381434341'; // Format: Country Code + Number
+    try {
+        // Format the message
+        const formattedMessage = `*New Course Inquiry*%0A%0A*Name:* ${encodeURIComponent(name)}%0A*Email:* ${encodeURIComponent(email)}%0A*Phone:* ${encodeURIComponent(phone)}%0A*Course:* ${encodeURIComponent(course)}%0A*Message:* ${encodeURIComponent(message)}`;
+        
+        // Create WhatsApp URL
+        const whatsappURL = `https://wa.me/9959732476`;
+        
+        // Open WhatsApp in new tab
+        window.open(whatsappURL, '_blank');
+        
+        // Reset form
+        document.getElementById('whatsappForm').reset();
+        
+        // Hide any existing error message
+        const errorElement = document.getElementById('error-message');
+        errorElement.style.display = 'none';
+        errorElement.textContent = '';
+        
+    } catch (error) {
+        // Show error message
+        const errorElement = document.getElementById('error-message');
+        errorElement.textContent = 'The WhatsApp number is not available. Please try again later or contact us through email.';
+        errorElement.style.display = 'block';
+        
+        // Log error for debugging
+        console.error('WhatsApp send error:', error);
+    }
     
-    // Create WhatsApp URL
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(whatsappMessage)}`;
-    
-    // Open WhatsApp in new tab
-    window.open(whatsappUrl, '_blank');
-    
-    // Reset form
-    document.getElementById('whatsappForm').reset();
+    return false;
 }
 </script>
 
